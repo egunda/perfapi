@@ -30,4 +30,4 @@ output will be
 }
 ```
 
-To install tcping refer 'https://gist.github.com/cnDelbert/5fb06ccf10c19dbce3a7'
+To install tcpping refer 'https://gist.github.com/cnDelbert/5fb06ccf10c19dbce3a7'
