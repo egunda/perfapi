@@ -17,15 +17,15 @@ $escapedHost = escapeshellarg($hostname);
 $serverHostname = gethostname();
 
 // Perform the ping test and calculate the average ping time
-$pingOutput = shell_exec("ping -c 4 $escapedHost");
-if ($pingOutput === null) {
-    echo json_encode(['error' => 'Failed to execute ping command']);
-    exit;
-}
+//$pingOutput = shell_exec("ping -c 4 $escapedHost");
+//if ($pingOutput === null) {
+//    echo json_encode(['error' => 'Failed to execute ping command']);
+//    exit;
+//}
 
 // Extract the average ping time from the ping output
-preg_match('/rtt min\/avg\/max\/mdev = [\d\.]+\/([\d\.]+)\/[\d\.]+\/[\d\.]+ ms/', $pingOutput, $matches);
-$avgPing = $matches[1] ?? 'N/A';
+//preg_match('/rtt min\/avg\/max\/mdev = [\d\.]+\/([\d\.]+)\/[\d\.]+\/[\d\.]+ ms/', $pingOutput, $matches);
+//$avgPing = $matches[1] ?? 'N/A';
 
 // Perform the tcpping test and calculate the average TCP response time
 $tcppingOutput = shell_exec("tcpping -x 4 $escapedHost");
@@ -40,7 +40,7 @@ $tcppingTimes = $matches[1];
 $avgTcpPing = !empty($tcppingTimes) ? array_sum($tcppingTimes) / count($tcppingTimes) : 'N/A';
 
 // Perform the curl command to get the timing metrics
-$command = "curl -s -w \"{ \\\"hostname\\\": \\\"$serverHostname\\\", \\\"target\\\": \\\"$target\\\", \\\"avg_ping_ms\\\": $avgPing, \\\"avg_tcp_ping_ms\\\": $avgTcpPing, \\\"time_namelookup\\\": %{time_namelookup}, \\\"time_connect\\\": %{time_connect}, \\\"time_appconnect\\\": %{time_appconnect}, \\\"time_pretransfer\\\": %{time_pretransfer}, \\\"time_redirect\\\": %{time_redirect}, \\\"time_starttransfer\\\": %{time_starttransfer}, \\\"time_total\\\": %{time_total} }\" -o /dev/null $target -I";
+$command = "curl -s -w \"{ \\\"hostname\\\": \\\"$serverHostname\\\", \\\"target\\\": \\\"$target\\\", \\\"avg_tcp_ping_ms\\\": $avgTcpPing, \\\"time_namelookup\\\": %{time_namelookup}, \\\"time_connect\\\": %{time_connect}, \\\"time_appconnect\\\": %{time_appconnect}, \\\"time_pretransfer\\\": %{time_pretransfer}, \\\"time_redirect\\\": %{time_redirect}, \\\"time_starttransfer\\\": %{time_starttransfer}, \\\"time_total\\\": %{time_total} }\" -o /dev/null $target -I";
 
 $output = shell_exec($command);
 
